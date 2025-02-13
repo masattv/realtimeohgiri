@@ -1,0 +1,67 @@
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #2196F3;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.section-title {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.topic-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 15px;
+  transition: transform 0.2s;
+}
+
+.topic-card:hover {
+  transform: translateY(-2px);
+}
+
+.topic-card.active {
+  background-color: #fff;
+}
+
+.topic-card.inactive {
+  background-color: #e0e0e0;
+}
+
+.topic-status {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.topic-content {
+  margin-top: 10px;
+}
+
+.topic-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.topic-text {
+  font-size: 14px;
+  line-height: 1.4;
+}
