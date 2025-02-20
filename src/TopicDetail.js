@@ -1,5 +1,5 @@
 // src/TopicDetail.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 import Layout from './components/Layout';
@@ -12,9 +12,20 @@ function TopicDetail() {
   const [answers, setAnswers] = useState([]);
   const [socket, setSocket] = useState(null);
 
+  // fetchTopicをuseCallbackでメモ化
+  const fetchTopic = useCallback(() => {
+    fetch(`${process.env.REACT_APP_API_URL}/topics/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        setTopic(data);
+        setAnswers(data.answers);
+      })
+      .catch(console.error);
+  }, [id]);
+
   useEffect(() => {
     // WebSocket接続を確立
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io(process.env.REACT_APP_WS_URL);
     setSocket(newSocket);
 
     // コメンタリーの更新をリッスン
@@ -28,26 +39,22 @@ function TopicDetail() {
       );
     });
 
+    // 新しい回答が投稿されたときにトピックを再取得
+    newSocket.on('new_answer_posted', () => {
+      fetchTopic();
+    });
+
     return () => newSocket.close();
-  }, []);
+  }, [fetchTopic]);
 
-  const fetchTopic = () => {
-    fetch(`http://localhost:5000/topics/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        setTopic(data);
-        setAnswers(data.answers);
-      })
-      .catch(console.error);
-  };
-
+  // トピックの初期取得
   useEffect(() => {
     fetchTopic();
-  }, [id]);
+  }, [fetchTopic]);
 
   const submitAnswer = () => {
     if (!answerText.trim()) return;
-    fetch(`http://localhost:5000/topics/${id}/answers`, {
+    fetch(`${process.env.REACT_APP_API_URL}/topics/${id}/answers`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ answer_text: answerText })
@@ -55,13 +62,15 @@ function TopicDetail() {
     .then(res => res.json())
     .then(() => {
       setAnswerText("");
+      // 新しい回答が投稿されたことをサーバーに通知
+      socket?.emit('answer_posted');
       fetchTopic();
     })
     .catch(console.error);
   };
 
   const voteAnswer = (answerId) => {
-    fetch(`http://localhost:5000/answers/${answerId}/vote`, { method: 'POST' })
+    fetch(`${process.env.REACT_APP_API_URL}/answers/${answerId}/vote`, { method: 'POST' })
       .then(res => res.json())
       .then(data => {
         setAnswers(answers.map(ans =>

@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
 
 function App() {
   const [topics, setTopics] = useState([]);
 
-  useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/topics');
-        const data = await response.json();
-        setTopics(data);
-      } catch (error) {
-        console.error('Error fetching topics:', error);
-      }
-    };
+  const fetchTopics = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/topics`);
+      const data = await response.json();
+      setTopics(data);
+    } catch (error) {
+      console.error('Error fetching topics:', error);
+    }
+  }, []);
 
+  useEffect(() => {
     fetchTopics();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetchTopics]);
 
   return (
     <div className="app">
