@@ -22,10 +22,15 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>リアルタイム大喜利</h1>
+        <div className="header-content">
+          <h1>リアルタイム大喜利</h1>
+          <nav className="header-nav">
+            {/* 必要に応じてナビゲーションリンクを追加 */}
+          </nav>
+        </div>
       </header>
       <main className="main">
-        <h2 className="section-title">大喜利のお題一覧</h2>
+        <h2 className="section-title">みんなのお題</h2>
         <div className="topics-grid">
           {topics.map((topic) => (
             <Link 
@@ -46,4 +51,3 @@ function App() {
 }
 
 export default App;
-
