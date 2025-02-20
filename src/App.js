@@ -6,18 +6,18 @@ function App() {
   const [topics, setTopics] = useState([]);
 
   useEffect(() => {
-    fetchTopics();
-  }, []);
+    const fetchTopics = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/topics');
+        const data = await response.json();
+        setTopics(data);
+      } catch (error) {
+        console.error('Error fetching topics:', error);
+      }
+    };
 
-  const fetchTopics = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/topics');
-      const data = await response.json();
-      setTopics(data);
-    } catch (error) {
-      console.error('Error fetching topics:', error);
-    }
-  };
+    fetchTopics();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="app">
