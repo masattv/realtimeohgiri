@@ -13,7 +13,7 @@ function AdminPanel() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/topics/add', {
+      const response = await fetch('https://realtimeohgiri-backend.onrender.com/topics/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -14,7 +14,7 @@ function TopicDetail() {
 
   // fetchTopicをuseCallbackでメモ化
   const fetchTopic = useCallback(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/topics/${id}`)
+    fetch(`https://realtimeohgiri-backend.onrender.com/topics/${id}`)
       .then(res => res.json())
       .then(data => {
         setTopic(data);
@@ -25,7 +25,7 @@ function TopicDetail() {
 
   useEffect(() => {
     // WebSocket接続を確立
-    const newSocket = io(process.env.REACT_APP_WS_URL);
+    const newSocket = io('https://realtimeohgiri-backend.onrender.com');
     setSocket(newSocket);
 
     // コメンタリーの更新をリッスン
@@ -54,7 +54,7 @@ function TopicDetail() {
 
   const submitAnswer = () => {
     if (!answerText.trim()) return;
-    fetch(`${process.env.REACT_APP_API_URL}/topics/${id}/answers`, {
+    fetch(`https://realtimeohgiri-backend.onrender.com/topics/${id}/answers`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ answer_text: answerText })
@@ -70,7 +70,7 @@ function TopicDetail() {
   };
 
   const voteAnswer = (answerId) => {
-    fetch(`${process.env.REACT_APP_API_URL}/answers/${answerId}/vote`, { method: 'POST' })
+    fetch(`https://realtimeohgiri-backend.onrender.com/answers/${answerId}/vote`, { method: 'POST' })
       .then(res => res.json())
       .then(data => {
         setAnswers(answers.map(ans =>
